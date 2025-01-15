@@ -1,6 +1,7 @@
 // Components
 import {GrFormNext,GrFormPrevious} from 'react-icons/gr';
 import {FiSend} from 'react-icons/fi'
+import Steps from './components/Steps';
 import UserForm from './components/UserForm';
 import ReviewForm from './components/ReviewForm';
 import Thanks from './components/Thanks';
@@ -8,9 +9,32 @@ import './App.css'
 
 // Hooks
 import {useForm} from './hooks/useForm'
+import { useState } from 'react';
+
+const fomrTemplate={
+  name:"",
+  email:"",
+  review:"",
+  comment:""
+}
+
+
+
 function App() {
 
-  const formComponents =[<UserForm/>,<ReviewForm/>,<Thanks/>]
+  const [data,setData]=useState(fomrTemplate)
+
+  const updateFieldHandler=(key,value)=>{
+    setData((prev)=>{
+      return {...prev,[key]:value}
+    })
+
+  }
+
+  const formComponents =[
+  <UserForm data={data} updateFieldHandler={updateFieldHandler}/>,
+  <ReviewForm data={data} updateFieldHandler={updateFieldHandler}/>,
+  <Thanks data={data} updateFieldHandler={updateFieldHandler}/>]
 
   const {currentStep,
     currentComponent,
@@ -25,7 +49,7 @@ function App() {
         <p>Ficamos felizes com a sua compra, utilize o formulário abaixo para avaliar o produto</p>
       </div>
       <div className="form-container">
-        <p>etapas</p>
+        <Steps currentStep={currentStep}/>
         <form onSubmit={(e)=>changeStep(currentStep+1,e)} >
 
           <div className="inputs-container">{currentComponent}</div>
